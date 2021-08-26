@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <table class="output">
+
+
+    </table>
+    <script>
+        //https://docs.google.com/spreadsheets/d/1XAY-D_H-Vf3w6RIkjQI0911SR27lwFlG_y69CCHvANU/edit?usp=sharing
+        const base = "https://docs.google.com/spreadsheets/d/1XAY-D_H-Vf3w6RIkjQI0911SR27lwFlG_y69CCHvANU/gviz/tq?"
+        const output = document.querySelector('.output');
+        //কুয়েরি করার উপায় 
+        const query = encodeURIComponent('Select A,B,C where C > 3 limit 10');//ABC সেল দেখানো + ১০ টা ডাটা 
+        const url = base + '&tq=' + query;
+        fetch(url)
+            .then(res => res.text())
+            .then(rep => {
+                console.log(rep);
+                const data = JSON.parse(rep.substr(47).slice(0, -2));
+                const row = document.createElement('tr');
+                output.append(row);
+                data.table.cols.forEach(heading => {
+                    const cell = document.createElement('td');
+                    cell.innerText = heading.label;
+                    row.append(cell);
+                    // console.log(heading);
+                });
+                data.table.rows.forEach(main => {
+                    const container = document.createElement('tr');
+                    output.append(container);
+                    main.c.forEach(el => {
+                        const cell = document.createElement('td');
+                        cell.innerText = el.v;
+                        container.append(cell);
+                        console.log(main);
+                    });
+                });
+                console.log(data);
+            })
+
+
+    </script>
+</body>
+
+</html>
